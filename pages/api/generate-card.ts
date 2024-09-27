@@ -1,5 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { generateImage, addTextToImage } from '../../utils/imageProcessing'
+import path from 'path'
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method !== 'POST') {
@@ -13,7 +14,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   }
 
   try {
-    // Generate base image using AI model
+    // Generate base image using AI model (currently using placeholder)
     const baseImagePath = await generateImage(wishes)
     if (!baseImagePath) {
       throw new Error('Failed to generate base image')
@@ -25,9 +26,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       throw new Error('Failed to add text to image')
     }
 
-    // In a real-world scenario, you'd upload this image to a storage service
-    // and return the URL. For this example, we'll assume it's served from the public directory.
-    const imageUrl = `/generated/${finalImagePath.split('/').pop()}`
+    // Get the filename from the path
+    const filename = path.basename(finalImagePath)
+    const imageUrl = `/generated/${filename}`
 
     res.status(200).json({ imageUrl })
   } catch (error) {
