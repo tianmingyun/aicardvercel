@@ -1,6 +1,13 @@
-module.exports = {
+/** @type {import('next').NextConfig} */
+const nextConfig = {
   reactStrictMode: true,
   images: {
-    domains: ['your-image-hosting-domain.com'],
+    domains: ['localhost'], // Add any other domains you might use for image hosting
+  },
+  webpack: (config) => {
+    config.resolve.fallback = { fs: false, path: false };
+    return config;
   },
 }
+
+module.exports = nextConfig
