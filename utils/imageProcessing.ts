@@ -2,7 +2,6 @@ import { createCanvas, loadImage, registerFont } from 'canvas'
 import path from 'path'
 import fs from 'fs'
 
-// This is a placeholder function. In reality, you'd call the AI model API here.
 export async function generateImage(prompt: string): Promise<string> {
   try {
     // Simulate AI image generation
@@ -30,7 +29,7 @@ export async function addTextToImage(imagePath: string, text: string): Promise<s
     ctx.drawImage(image, 0, 0, canvas.width, canvas.height)
 
     // Configure text style
-    ctx.font = '32px Arial'
+    ctx.font = '32px "Noto Sans SC"'
     ctx.fillStyle = 'white'
     ctx.textAlign = 'center'
     ctx.textBaseline = 'middle'
