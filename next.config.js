@@ -2,7 +2,7 @@
 const nextConfig = {
   reactStrictMode: true,
   images: {
-    domains: ['localhost'], // Add any other domains you might use for image hosting
+    domains: ['localhost'],
   },
   webpack: (config) => {
     config.resolve.fallback = { fs: false, path: false };
