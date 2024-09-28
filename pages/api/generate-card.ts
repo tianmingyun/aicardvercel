@@ -1,21 +1,24 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { generateImage, addTextToImage } from '../../utils/imageProcessing'
 import path from 'path'
+import fs from 'fs'
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+  console.log('API route called')
   if (req.method !== 'POST') {
+    console.log('Method not allowed:', req.method)
     return res.status(405).json({ message: 'Method Not Allowed' })
   }
 
   const { wishes } = req.body
+  console.log('Received wishes:', wishes)
 
   if (!wishes) {
+    console.log('No wishes provided')
     return res.status(400).json({ message: 'Wishes are required' })
   }
 
   try {
-    console.log('Received wishes:', wishes)
-
     // Generate base image using AI model (currently using placeholder)
     const baseImagePath = await generateImage(wishes)
     if (!baseImagePath) {
@@ -34,6 +37,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const filename = path.basename(finalImagePath)
     const imageUrl = `/generated/${filename}`
     console.log('Image URL:', imageUrl)
+
+    // Check if the file exists
+    const publicPath = path.join(process.cwd(), 'public', 'generated', filename)
+    if (!fs.existsSync(publicPath)) {
+      throw new Error('Generated image file not found')
+    }
 
     res.status(200).json({ imageUrl })
   } catch (error) {
