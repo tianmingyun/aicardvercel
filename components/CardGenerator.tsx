@@ -11,8 +11,10 @@ export default function CardGenerator() {
     e.preventDefault()
     setIsLoading(true)
     setError('')
+    setGeneratedImage('')
 
     try {
+      console.log('Submitting wishes:', wishes)
       const response = await fetch('/api/generate-card', {
         method: 'POST',
         headers: {
@@ -27,6 +29,7 @@ export default function CardGenerator() {
       }
 
       const data = await response.json()
+      console.log('Received data:', data)
       setGeneratedImage(data.imageUrl)
     } catch (error) {
       console.error('Error generating card:', error)
