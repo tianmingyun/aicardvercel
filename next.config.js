@@ -14,6 +14,8 @@ const nextConfig = {
     }
     return config;
   },
+  // 添加以下内容以处理.js文件
+  pageExtensions: ['tsx', 'ts', 'jsx', 'js'],
 }
 
 module.exports = nextConfig
