@@ -23,12 +23,15 @@ export default function CardGenerator() {
         body: JSON.stringify({ wishes }),
       })
 
+      console.log('Response status:', response.status)
+      const responseText = await response.text()
+      console.log('Response text:', responseText)
+
       if (!response.ok) {
-        const errorData = await response.json()
-        throw new Error(errorData.message || 'Failed to generate card')
+        throw new Error(responseText || 'Failed to generate card')
       }
 
-      const data = await response.json()
+      const data = JSON.parse(responseText)
       console.log('Received data:', data)
       setGeneratedImage(data.imageUrl)
     } catch (error) {
