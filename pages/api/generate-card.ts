@@ -14,21 +14,26 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   }
 
   try {
+    console.log('Received wishes:', wishes)
+
     // Generate base image using AI model (currently using placeholder)
     const baseImagePath = await generateImage(wishes)
     if (!baseImagePath) {
       throw new Error('Failed to generate base image')
     }
+    console.log('Base image generated:', baseImagePath)
 
     // Add text to the image
     const finalImagePath = await addTextToImage(baseImagePath, wishes)
     if (!finalImagePath) {
       throw new Error('Failed to add text to image')
     }
+    console.log('Final image generated:', finalImagePath)
 
     // Get the filename from the path
     const filename = path.basename(finalImagePath)
     const imageUrl = `/generated/${filename}`
+    console.log('Image URL:', imageUrl)
 
     res.status(200).json({ imageUrl })
   } catch (error) {
