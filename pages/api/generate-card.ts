@@ -3,9 +3,9 @@ import { generateImage, addTextToImage } from '../../utils/imageProcessing'
 import path from 'path'
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-  console.log('API route called') // 新增
+  console.log('API route called')
   if (req.method !== 'POST') {
-    console.log('Method not allowed:', req.method) // 新增
+    console.log('Method not allowed:', req.method)
     return res.status(405).json({ message: 'Method Not Allowed' })
   }
 
@@ -36,10 +36,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const imageUrl = `/generated/${filename}`
     console.log('Image URL:', imageUrl)
 
-    console.log('Sending response') // 新增
+    console.log('Sending response')
     res.status(200).json({ imageUrl })
   } catch (error) {
     console.error('Error generating card:', error)
-    res.status(500).json({ message: `Failed to generate card: ${error.message}` })
+    res.status(500).json({ message: `Failed to generate card: ${error instanceof Error ? error.message : 'Unknown error'}` })
   }
 }
