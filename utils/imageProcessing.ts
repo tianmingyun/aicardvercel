@@ -4,6 +4,7 @@ import fs from 'fs'
 
 export async function generateImage(prompt: string): Promise<string> {
   try {
+    console.log('Generating image for prompt:', prompt)
     // Simulate AI image generation
     await new Promise(resolve => setTimeout(resolve, 2000))
     const placeholderPath = path.join(process.cwd(), 'public', 'placeholder.jpg')
@@ -12,6 +13,7 @@ export async function generateImage(prompt: string): Promise<string> {
       throw new Error('Placeholder image not found')
     }
     
+    console.log('Using placeholder image:', placeholderPath)
     return placeholderPath
   } catch (error) {
     console.error('Error generating image:', error)
@@ -21,6 +23,7 @@ export async function generateImage(prompt: string): Promise<string> {
 
 export async function addTextToImage(imagePath: string, text: string): Promise<string> {
   try {
+    console.log('Adding text to image:', imagePath, text)
     const image = await loadImage(imagePath)
     const canvas = createCanvas(image.width, image.height)
     const ctx = canvas.getContext('2d')
@@ -40,6 +43,7 @@ export async function addTextToImage(imagePath: string, text: string): Promise<s
     // Ensure the output directory exists
     const outputDir = path.join(process.cwd(), 'public', 'generated')
     if (!fs.existsSync(outputDir)) {
+      console.log('Creating output directory:', outputDir)
       fs.mkdirSync(outputDir, { recursive: true })
     }
 
@@ -51,7 +55,10 @@ export async function addTextToImage(imagePath: string, text: string): Promise<s
     stream.pipe(out)
 
     return new Promise((resolve, reject) => {
-      out.on('finish', () => resolve(outputPath))
+      out.on('finish', () => {
+        console.log('Image saved:', outputPath)
+        resolve(outputPath)
+      })
       out.on('error', reject)
     })
   } catch (error) {
