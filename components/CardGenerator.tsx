@@ -27,12 +27,16 @@ export default function CardGenerator() {
 
       console.log('Response received:', response.status)
 
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`)
+      }
+
       const data = await response.json()
       console.log('Received data:', data)
       setGeneratedImage(data.imageUrl)
     } catch (error) {
       console.error('Error generating card:', error)
-      setError(error.message || 'Failed to generate card. Please try again.')
+      setError(error instanceof Error ? error.message : 'Failed to generate card. Please try again.')
     } finally {
       setIsLoading(false)
       console.log('Request completed')
