@@ -1,9 +1,13 @@
 import crypto from 'crypto';
 import axios from 'axios';
 
-const APP_ID = process.env.XFYUN_APP_ID;
-const API_KEY = process.env.XFYUN_API_KEY;
-const API_SECRET = process.env.XFYUN_API_SECRET;
+const APP_ID = process.env.XFYUN_APP_ID || '';
+const API_KEY = process.env.XFYUN_API_KEY || '';
+const API_SECRET = process.env.XFYUN_API_SECRET || '';
+
+if (!APP_ID || !API_KEY || !API_SECRET) {
+  console.error('Missing Xfyun API credentials. Please check your environment variables.');
+}
 
 interface XfyunResponse {
   header: {
