@@ -1,27 +1,3 @@
-import * as crypto from 'crypto-browserify';
-import axios from 'axios';
-
-const APP_ID = process.env.XFYUN_APP_ID || '';
-const API_KEY = process.env.XFYUN_API_KEY || '';
-const API_SECRET = process.env.XFYUN_API_SECRET || '';
-
-if (!APP_ID || !API_KEY || !API_SECRET) {
-  console.error('Missing Xfyun API credentials. Please check your environment variables.');
-}
-
-interface XfyunResponse {
-  header: {
-    code: number;
-    message: string;
-    sid: string;
-  };
-  payload: {
-    image_list: {
-      image: string;
-    }[];
-  };
-}
-
 export async function generateImageWithXfyun(prompt: string): Promise<string> {
   const url = 'https://spark-api.xf-yun.com/v2.1/tti';
   const host = 'spark-api.xf-yun.com';
@@ -55,8 +31,12 @@ export async function generateImageWithXfyun(prompt: string): Promise<string> {
     },
   };
 
+  console.log('Request data:', JSON.stringify(data));
+  console.log('Authorization header:', authorization);
+
   try {
-    const response = await axios.post<XfyunResponse>(url, data, {
+    console.log('Sending request to Xfyun API...');
+    const response = await axios.post(url, data, {
       headers: {
         'Content-Type': 'application/json',
         'Host': host,
@@ -65,6 +45,8 @@ export async function generateImageWithXfyun(prompt: string): Promise<string> {
       },
     });
 
+    console.log('Received response from Xfyun API:', response.status, response.data);
+
     if (response.data.header.code !== 0) {
       throw new Error(`API error: ${response.data.header.message}`);
     }
@@ -72,7 +54,7 @@ export async function generateImageWithXfyun(prompt: string): Promise<string> {
     const imageBase64 = response.data.payload.image_list[0].image;
     return `data:image/png;base64,${imageBase64}`;
   } catch (error) {
-    console.error('Error calling Xfyun API:', error);
+    console.error('Error calling Xfyun API:', error.response ? error.response.data : error.message);
     throw error;
   }
 }
