@@ -16,17 +16,14 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   }
 
   try {
-    // Generate base image using Xfyun API
     console.log('Generating base image...')
     const baseImageUrl = await generateImage(wishes)
     console.log('Base image generated:', baseImageUrl)
 
-    // Add text to the image
     console.log('Adding text to image...')
     const finalImagePath = await addTextToImage(baseImageUrl, wishes)
     console.log('Final image generated:', finalImagePath)
 
-    console.log('Sending response')
     res.status(200).json({ imageUrl: finalImagePath })
   } catch (error) {
     console.error('Error generating card:', error)
