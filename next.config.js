@@ -14,13 +14,10 @@ const nextConfig = {
     }
     return config;
   },
-  // 添加以下行
-  onDemandEntries: {
-    // 期间页面应该保持活动状态而不被丢弃
-    maxInactiveAge: 25 * 1000,
-    // 同时保持活动状态的页面数
-    pagesBufferLength: 2,
-  },
+  // Add the following lines
+  poweredByHeader: false,
+  generateEtags: false,
+  assetPrefix: '',
 }
 
 module.exports = nextConfig
