@@ -1,6 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { generateImage, addTextToImage } from '../../utils/imageProcessing'
-import path from 'path'
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   console.log('API route called')
@@ -17,27 +16,18 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   }
 
   try {
-    // Generate base image using AI model (currently using placeholder)
-    const baseImagePath = await generateImage(wishes)
-    if (!baseImagePath) {
-      throw new Error('Failed to generate base image')
-    }
-    console.log('Base image generated:', baseImagePath)
+    // Generate base image using Xfyun API
+    console.log('Generating base image...')
+    const baseImageUrl = await generateImage(wishes)
+    console.log('Base image generated:', baseImageUrl)
 
     // Add text to the image
-    const finalImagePath = await addTextToImage(baseImagePath, wishes)
-    if (!finalImagePath) {
-      throw new Error('Failed to add text to image')
-    }
+    console.log('Adding text to image...')
+    const finalImagePath = await addTextToImage(baseImageUrl, wishes)
     console.log('Final image generated:', finalImagePath)
 
-    // Get the filename from the path
-    const filename = path.basename(finalImagePath)
-    const imageUrl = `/generated/${filename}`
-    console.log('Image URL:', imageUrl)
-
     console.log('Sending response')
-    res.status(200).json({ imageUrl })
+    res.status(200).json({ imageUrl: finalImagePath })
   } catch (error) {
     console.error('Error generating card:', error)
     res.status(500).json({ message: `Failed to generate card: ${error instanceof Error ? error.message : 'Unknown error'}` })
