@@ -1,4 +1,4 @@
-import crypto from 'crypto';
+import crypto from 'crypto-browserify';
 import axios from 'axios';
 
 const APP_ID = process.env.XFYUN_APP_ID || '';
