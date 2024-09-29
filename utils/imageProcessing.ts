@@ -1,30 +1,24 @@
 import { createCanvas, loadImage, registerFont } from 'canvas'
 import path from 'path'
 import fs from 'fs'
+import { generateImageWithXfyun } from './xfyunApi'
 
 export async function generateImage(prompt: string): Promise<string> {
   try {
     console.log('Generating image for prompt:', prompt)
-    // Simulate AI image generation
-    await new Promise(resolve => setTimeout(resolve, 2000))
-    const placeholderPath = path.join(process.cwd(), 'public', 'placeholder.jpg')
-    
-    if (!fs.existsSync(placeholderPath)) {
-      throw new Error('Placeholder image not found')
-    }
-    
-    console.log('Using placeholder image:', placeholderPath)
-    return placeholderPath
+    const imageUrl = await generateImageWithXfyun(prompt)
+    console.log('Image generated:', imageUrl)
+    return imageUrl
   } catch (error) {
     console.error('Error generating image:', error)
     throw error
   }
 }
 
-export async function addTextToImage(imagePath: string, text: string): Promise<string> {
+export async function addTextToImage(imageUrl: string, text: string): Promise<string> {
   try {
-    console.log('Adding text to image:', imagePath, text)
-    const image = await loadImage(imagePath)
+    console.log('Adding text to image:', imageUrl, text)
+    const image = await loadImage(imageUrl)
     const canvas = createCanvas(image.width, image.height)
     const ctx = canvas.getContext('2d')
 
@@ -57,9 +51,12 @@ export async function addTextToImage(imagePath: string, text: string): Promise<s
     return new Promise((resolve, reject) => {
       out.on('finish', () => {
         console.log('Image saved:', outputPath)
-        resolve(outputPath)
+        resolve(`/generated/${outputFileName}`)
       })
-      out.on('error', reject)
+      out.on('error', (err) => {
+        console.error('Error saving image:', err)
+        reject(err)
+      })
     })
   } catch (error) {
     console.error('Error adding text to image:', error)
