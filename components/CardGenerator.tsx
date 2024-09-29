@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import Image from 'next/image'
 
-export default function CardGenerator() {
+const CardGenerator: React.FC = () => {
   const [wishes, setWishes] = useState('')
   const [generatedImage, setGeneratedImage] = useState('')
   const [isLoading, setIsLoading] = useState(false)
@@ -85,3 +85,5 @@ export default function CardGenerator() {
     </div>
   )
 }
+
+export default CardGenerator
