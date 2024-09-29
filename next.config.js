@@ -10,14 +10,16 @@ const nextConfig = {
         ...config.resolve.fallback,
         fs: false,
         path: false,
+        crypto: require.resolve('crypto-browserify'),
       };
     }
     return config;
   },
-  // Add the following lines
-  poweredByHeader: false,
-  generateEtags: false,
-  assetPrefix: '',
+  env: {
+    XFYUN_APP_ID: process.env.XFYUN_APP_ID,
+    XFYUN_API_KEY: process.env.XFYUN_API_KEY,
+    XFYUN_API_SECRET: process.env.XFYUN_API_SECRET,
+  },
 }
 
 module.exports = nextConfig
