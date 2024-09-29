@@ -10,7 +10,7 @@ const nextConfig = {
         ...config.resolve.fallback,
         fs: false,
         path: false,
-        crypto: require.resolve('crypto-browserify'),
+        crypto: 'crypto-browserify',
       };
     }
     return config;
