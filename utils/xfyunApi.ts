@@ -68,6 +68,7 @@ export async function generateImageWithXfyun(prompt: string): Promise<string> {
     },
   };
 
+  console.log('Request URL:', url);
   console.log('Request data:', JSON.stringify(data));
   console.log('Authorization header:', authorization);
 
@@ -95,4 +96,8 @@ export async function generateImageWithXfyun(prompt: string): Promise<string> {
       const axiosError = error as AxiosError<XfyunResponse>;
       console.error('Error calling Xfyun API:', JSON.stringify(axiosError.response?.data) || axiosError.message);
     } else {
-      console.error('Error calling Xfyun API:', (
+      console.error('Error calling Xfyun API:', (error as Error).message);
+    }
+    throw error;
+  }
+}
