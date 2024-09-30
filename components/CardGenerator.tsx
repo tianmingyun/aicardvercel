@@ -13,10 +13,7 @@ const CardGenerator: React.FC = () => {
     setError('')
     setGeneratedImage('')
 
-    console.log('Form submitted')
-
     try {
-      console.log('Submitting wishes:', wishes)
       const response = await fetch('/api/generate-card', {
         method: 'POST',
         headers: {
@@ -25,21 +22,16 @@ const CardGenerator: React.FC = () => {
         body: JSON.stringify({ wishes }),
       })
 
-      console.log('Response received:', response.status)
-
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`)
       }
 
       const data = await response.json()
-      console.log('Received data:', data)
       setGeneratedImage(data.imageUrl)
     } catch (error) {
-      console.error('Error generating card:', error)
       setError(error instanceof Error ? error.message : 'Failed to generate card. Please try again.')
     } finally {
       setIsLoading(false)
-      console.log('Request completed')
     }
   }
 
