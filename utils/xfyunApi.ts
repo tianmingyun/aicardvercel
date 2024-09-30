@@ -1,4 +1,4 @@
-import axios from 'axios';
+import axios, { AxiosError } from 'axios';
 
 const APP_ID = process.env.XFYUN_APP_ID;
 const API_KEY = process.env.XFYUN_API_KEY;
@@ -16,6 +16,19 @@ if (typeof window === 'undefined') {
 } else {
   // Client-side
   crypto = require('crypto-browserify');
+}
+
+interface XfyunResponse {
+  header: {
+    code: number;
+    message: string;
+    sid: string;
+  };
+  payload: {
+    image_list: {
+      image: string;
+    }[];
+  };
 }
 
 export async function generateImageWithXfyun(prompt: string): Promise<string> {
@@ -56,7 +69,7 @@ export async function generateImageWithXfyun(prompt: string): Promise<string> {
 
   try {
     console.log('Sending request to Xfyun API...');
-    const response = await axios.post(url, data, {
+    const response = await axios.post<XfyunResponse>(url, data, {
       headers: {
         'Content-Type': 'application/json',
         'Host': host,
@@ -74,7 +87,12 @@ export async function generateImageWithXfyun(prompt: string): Promise<string> {
     const imageBase64 = response.data.payload.image_list[0].image;
     return `data:image/png;base64,${imageBase64}`;
   } catch (error) {
-    console.error('Error calling Xfyun API:', error.response ? error.response.data : error.message);
+    if (axios.isAxiosError(error)) {
+      const axiosError = error as AxiosError<XfyunResponse>;
+      console.error('Error calling Xfyun API:', axiosError.response?.data || axiosError.message);
+    } else {
+      console.error('Error calling Xfyun API:', (error as Error).message);
+    }
     throw error;
   }
 }
