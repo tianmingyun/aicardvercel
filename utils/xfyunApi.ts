@@ -34,8 +34,8 @@ export async function generateImageWithXfyun(prompt: string): Promise<string> {
 
   const url = 'https://spark-api.cn-huabei-1.xf-yun.com/v2.1/tti';
   const host = 'spark-api.cn-huabei-1.xf-yun.com';
+  const path = '/v2.1/tti';
   const date = new Date().toUTCString();
-  const algorithm = 'hmac-sha256';
 
   const data = JSON.stringify({
     header: {
@@ -60,26 +60,38 @@ export async function generateImageWithXfyun(prompt: string): Promise<string> {
     },
   });
 
-  const digest = crypto.createHash('sha256').update(data).digest('base64');
-  const digestHeader = `SHA-256=${digest}`;
+  // Generate tmp string
+  const tmp = `host: ${host}\ndate: ${date}\nPOST ${path} HTTP/1.1`;
 
-  const signatureOrigin = `host: ${host}\ndate: ${date}\nPOST /v2.1/tti HTTP/1.1\ndigest: ${digestHeader}`;
-  const signatureSha = crypto.createHmac('sha256', API_SECRET).update(signatureOrigin).digest('base64');
-  const authorization = `api_key="${API_KEY}", algorithm="${algorithm}", headers="host date request-line digest", signature="${signatureSha}"`;
+  // Generate signature
+  const tmp_sha = crypto.createHmac('sha256', API_SECRET).update(tmp).digest();
+  const signature = tmp_sha.toString('base64');
+
+  // Generate authorization_origin
+  const authorization_origin = `api_key="${API_KEY}", algorithm="hmac-sha256", headers="host date request-line", signature="${signature}"`;
+
+  // Generate final authorization
+  const authorization = Buffer.from(authorization_origin).toString('base64');
 
   console.log('Request URL:', url);
   console.log('Request data:', data);
   console.log('Authorization header:', authorization);
 
+  // Generate final URL with query parameters
+  const queryParams = new URLSearchParams({
+    authorization: authorization,
+    date: date,
+    host: host
+  });
+  const finalUrl = `${url}?${queryParams.toString()}`;
+
   try {
     console.log('Sending request to Xfyun API...');
-    const response = await axios.post<XfyunResponse>(url, data, {
+    const response = await axios.post<XfyunResponse>(finalUrl, data, {
       headers: {
         'Content-Type': 'application/json',
         'Host': host,
         'Date': date,
-        'Digest': digestHeader,
-        'Authorization': authorization,
       },
     });
 
