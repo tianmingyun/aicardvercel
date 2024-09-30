@@ -11,6 +11,7 @@ console.log('API_SECRET:', API_SECRET ? 'Set' : 'Not set');
 
 if (!APP_ID || !API_KEY || !API_SECRET) {
   console.error('Missing Xfyun API credentials. Please check your environment variables.');
+  throw new Error('Missing Xfyun API credentials');
 }
 
 interface XfyunResponse {
