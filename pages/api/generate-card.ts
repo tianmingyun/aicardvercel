@@ -27,6 +27,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     res.status(200).json({ imageUrl: finalImagePath })
   } catch (error) {
     console.error('Error generating card:', error)
-    res.status(500).json({ message: `Failed to generate card: ${error instanceof Error ? error.message : 'Unknown error'}` })
+    res.status(500).json({ 
+      message: `Failed to generate card: ${error instanceof Error ? error.message : 'Unknown error'}`,
+      error: JSON.stringify(error, Object.getOwnPropertyNames(error))
+    })
   }
 }
