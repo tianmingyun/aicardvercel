@@ -4,6 +4,10 @@ const APP_ID = process.env.XFYUN_APP_ID;
 const API_KEY = process.env.XFYUN_API_KEY;
 const API_SECRET = process.env.XFYUN_API_SECRET;
 
+console.log('APP_ID:', APP_ID);
+console.log('API_KEY:', API_KEY);
+console.log('API_SECRET:', API_SECRET ? 'Set' : 'Not set');
+
 if (!APP_ID || !API_KEY || !API_SECRET) {
   console.error('Missing Xfyun API credentials. Please check your environment variables.');
 }
@@ -32,8 +36,8 @@ interface XfyunResponse {
 }
 
 export async function generateImageWithXfyun(prompt: string): Promise<string> {
-  const url = 'https://spark-api.xf-yun.com/v2.1/tti';
-  const host = 'spark-api.xf-yun.com';
+  const url = 'https://spark-api.cn-huabei-1.xf-yun.com/v2.1/tti';
+  const host = 'spark-api.cn-huabei-1.xf-yun.com';
   const date = new Date().toUTCString();
   const algorithm = 'hmac-sha256';
   const headers = 'host date request-line';
@@ -78,7 +82,7 @@ export async function generateImageWithXfyun(prompt: string): Promise<string> {
       },
     });
 
-    console.log('Received response from Xfyun API:', response.status, response.data);
+    console.log('Received response from Xfyun API:', response.status, JSON.stringify(response.data));
 
     if (response.data.header.code !== 0) {
       throw new Error(`API error: ${response.data.header.message}`);
@@ -89,10 +93,6 @@ export async function generateImageWithXfyun(prompt: string): Promise<string> {
   } catch (error) {
     if (axios.isAxiosError(error)) {
       const axiosError = error as AxiosError<XfyunResponse>;
-      console.error('Error calling Xfyun API:', axiosError.response?.data || axiosError.message);
+      console.error('Error calling Xfyun API:', JSON.stringify(axiosError.response?.data) || axiosError.message);
     } else {
-      console.error('Error calling Xfyun API:', (error as Error).message);
-    }
-    throw error;
-  }
-}
+      console.error('Error calling Xfyun API:', (
