@@ -1,4 +1,5 @@
 import axios, { AxiosError } from 'axios';
+import * as crypto from 'crypto';
 
 const APP_ID = process.env.XFYUN_APP_ID;
 const API_KEY = process.env.XFYUN_API_KEY;
@@ -10,16 +11,6 @@ console.log('API_SECRET:', API_SECRET ? 'Set' : 'Not set');
 
 if (!APP_ID || !API_KEY || !API_SECRET) {
   console.error('Missing Xfyun API credentials. Please check your environment variables.');
-}
-
-let crypto: any;
-
-if (typeof window === 'undefined') {
-  // Server-side
-  crypto = require('crypto');
-} else {
-  // Client-side
-  crypto = require('crypto-browserify');
 }
 
 interface XfyunResponse {
@@ -40,12 +31,8 @@ export async function generateImageWithXfyun(prompt: string): Promise<string> {
   const host = 'spark-api.cn-huabei-1.xf-yun.com';
   const date = new Date().toUTCString();
   const algorithm = 'hmac-sha256';
-  const headers = 'host date request-line';
-  const signatureOrigin = `host: ${host}\ndate: ${date}\nPOST /v2.1/tti HTTP/1.1`;
-  const signatureSha = crypto.createHmac('sha256', API_SECRET).update(signatureOrigin).digest('base64');
-  const authorization = `api_key="${API_KEY}", algorithm="${algorithm}", headers="${headers}", signature="${signatureSha}"`;
 
-  const data = {
+  const data = JSON.stringify({
     header: {
       app_id: APP_ID,
     },
@@ -66,10 +53,17 @@ export async function generateImageWithXfyun(prompt: string): Promise<string> {
         ],
       },
     },
-  };
+  });
+
+  const digest = crypto.createHash('sha256').update(data).digest('base64');
+  const digestHeader = `SHA-256=${digest}`;
+
+  const signatureOrigin = `host: ${host}\ndate: ${date}\nPOST /v2.1/tti HTTP/1.1\ndigest: ${digestHeader}`;
+  const signatureSha = crypto.createHmac('sha256', API_SECRET).update(signatureOrigin).digest('base64');
+  const authorization = `api_key="${API_KEY}", algorithm="${algorithm}", headers="host date request-line digest", signature="${signatureSha}"`;
 
   console.log('Request URL:', url);
-  console.log('Request data:', JSON.stringify(data));
+  console.log('Request data:', data);
   console.log('Authorization header:', authorization);
 
   try {
@@ -79,6 +73,7 @@ export async function generateImageWithXfyun(prompt: string): Promise<string> {
         'Content-Type': 'application/json',
         'Host': host,
         'Date': date,
+        'Digest': digestHeader,
         'Authorization': authorization,
       },
     });
