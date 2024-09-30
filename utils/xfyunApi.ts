@@ -28,6 +28,10 @@ interface XfyunResponse {
 }
 
 export async function generateImageWithXfyun(prompt: string): Promise<string> {
+  if (!API_SECRET) {
+    throw new Error('API_SECRET is not defined');
+  }
+
   const url = 'https://spark-api.cn-huabei-1.xf-yun.com/v2.1/tti';
   const host = 'spark-api.cn-huabei-1.xf-yun.com';
   const date = new Date().toUTCString();
