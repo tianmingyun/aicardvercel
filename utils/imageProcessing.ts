@@ -1,4 +1,3 @@
-import { createCanvas, loadImage } from 'canvas';
 import { generateImageWithXfyun } from './xfyunApi';
 
 export async function generateImage(prompt: string): Promise<string> {
@@ -12,6 +11,3 @@ export async function generateImage(prompt: string): Promise<string> {
     throw error;
   }
 }
-
-// We no longer need this function as we'll render text on the client side
-// export async function addTextToImage(imageUrl: string, text: string): Promise<string> { ... }
