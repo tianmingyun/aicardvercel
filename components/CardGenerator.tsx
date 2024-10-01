@@ -70,7 +70,7 @@ const CardGenerator: React.FC = () => {
         <div className="mt-8">
           <h2 className="text-2xl font-semibold mb-4">生成图片展示区域</h2>
           <div className="border-2 border-gray-300 rounded-md p-4">
-            <Image src={generatedImage} alt="Generated greeting card" width={500} height={300} layout="responsive" />
+            <img src={generatedImage} alt="Generated greeting card" className="w-full h-auto" />
           </div>
         </div>
       )}
