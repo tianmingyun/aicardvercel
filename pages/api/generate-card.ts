@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
-import { generateImage, addTextToImage } from '../../utils/imageProcessing'
+import { generateImage } from '../../utils/imageProcessing'
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   console.log('API route called')
@@ -17,14 +17,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
   try {
     console.log('Generating base image...')
-    const baseImageUrl = await generateImage(wishes)
-    console.log('Base image generated:', baseImageUrl)
+    const imageUrl = await generateImage(wishes)
+    console.log('Image generated:', imageUrl)
 
-    console.log('Adding text to image...')
-    const finalImageDataUrl = await addTextToImage(baseImageUrl, wishes)
-    console.log('Final image generated')
-
-    res.status(200).json({ imageUrl: finalImageDataUrl })
+    res.status(200).json({ imageUrl: imageUrl })
   } catch (error) {
     console.error('Error generating card:', error)
     res.status(500).json({ message: `Failed to generate card: ${error instanceof Error ? error.message : 'Unknown error'}` })
