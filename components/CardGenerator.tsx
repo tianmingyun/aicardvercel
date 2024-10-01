@@ -1,11 +1,11 @@
-import React, { useState } from 'react'
-import Image from 'next/image'
+import React, { useState, useRef, useEffect } from 'react'
 
 const CardGenerator: React.FC = () => {
   const [wishes, setWishes] = useState('')
   const [generatedImage, setGeneratedImage] = useState('')
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState('')
+  const canvasRef = useRef<HTMLCanvasElement>(null)
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -34,6 +34,29 @@ const CardGenerator: React.FC = () => {
       setIsLoading(false)
     }
   }
+
+  useEffect(() => {
+    if (generatedImage && canvasRef.current) {
+      const canvas = canvasRef.current
+      const ctx = canvas.getContext('2d')
+      if (ctx) {
+        const img = new Image()
+        img.onload = () => {
+          canvas.width = img.width
+          canvas.height = img.height
+          ctx.drawImage(img, 0, 0)
+          
+          // Add text to the image
+          ctx.font = '32px "Noto Sans SC", sans-serif'
+          ctx.fillStyle = 'white'
+          ctx.textAlign = 'center'
+          ctx.textBaseline = 'middle'
+          ctx.fillText(wishes, canvas.width / 2, canvas.height - 50)
+        }
+        img.src = generatedImage
+      }
+    }
+  }, [generatedImage, wishes])
 
   return (
     <div className="max-w-2xl mx-auto">
@@ -70,7 +93,7 @@ const CardGenerator: React.FC = () => {
         <div className="mt-8">
           <h2 className="text-2xl font-semibold mb-4">生成图片展示区域</h2>
           <div className="border-2 border-gray-300 rounded-md p-4">
-            <img src={generatedImage} alt="Generated greeting card" className="w-full h-auto" />
+            <canvas ref={canvasRef} className="w-full h-auto" />
           </div>
         </div>
       )}
