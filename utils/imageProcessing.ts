@@ -1,4 +1,5 @@
 import { createCanvas, loadImage } from 'canvas';
+import { generateImageWithXfyun } from './xfyunApi';
 
 export async function generateImage(prompt: string): Promise<string> {
   try {
