@@ -21,15 +21,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     console.log('Base image generated:', baseImageUrl)
 
     console.log('Adding text to image...')
-    const finalImagePath = await addTextToImage(baseImageUrl, wishes)
-    console.log('Final image generated:', finalImagePath)
+    const finalImageDataUrl = await addTextToImage(baseImageUrl, wishes)
+    console.log('Final image generated')
 
-    res.status(200).json({ imageUrl: finalImagePath })
+    res.status(200).json({ imageUrl: finalImageDataUrl })
   } catch (error) {
     console.error('Error generating card:', error)
-    res.status(500).json({ 
-      message: `Failed to generate card: ${error instanceof Error ? error.message : 'Unknown error'}`,
-      error: JSON.stringify(error, Object.getOwnPropertyNames(error))
-    })
+    res.status(500).json({ message: `Failed to generate card: ${error instanceof Error ? error.message : 'Unknown error'}` })
   }
 }
