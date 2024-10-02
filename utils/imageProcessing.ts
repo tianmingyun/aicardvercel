@@ -1,8 +1,10 @@
 import { generateImageWithXfyun } from './xfyunApi';
 
-function extractScenarioDetails(wishes: string): { festival: string, scenario: string } {
-  const festivals = ['新年', '春节', '元宵节', '清明节', '端午节', '中秋节', '国庆节', '圣诞节', '生日', '毕业', '结婚', '乔迁'];
-  let festival = '普通节日';
+type Festival = '新年' | '春节' | '元宵节' | '清明节' | '端午节' | '中秋节' | '国庆节' | '圣诞节' | '生日' | '毕业' | '结婚' | '乔迁' | '普通节日';
+
+function extractScenarioDetails(wishes: string): { festival: Festival, scenario: string } {
+  const festivals: Festival[] = ['新年', '春节', '元宵节', '清明节', '端午节', '中秋节', '国庆节', '圣诞节', '生日', '毕业', '结婚', '乔迁'];
+  let festival: Festival = '普通节日';
   let scenario = '祝福场景';
 
   for (const f of festivals) {
@@ -12,22 +14,23 @@ function extractScenarioDetails(wishes: string): { festival: string, scenario: s
     }
   }
 
-  const scenarioKeywords = {
-    '新年': ['烟花', '彤红的太阳', '跨年倒计时', '红包'],
-    '春节': ['年夜饭', '春联', '鞭炮', '团圆欢乐', '儿童', '舞龙', '舞狮', '红包'],
-    '元宵节': ['元宵', '灯笼', '舞狮', '烟花', '猜灯谜'],
+  const scenarioKeywords: Record<Festival, string[]> = {
+    '新年': ['烟花', '春联', '红包'],
+    '春节': ['年夜饭', '舞龙', '舞狮', '红包'],
+    '元宵节': ['元宵', '灯笼', '猜灯谜'],
     '清明节': ['踏青', '柳枝', '纸鸢'],
     '端午节': ['粽子', '龙舟', '艾草'],
-    '中秋节': ['月饼', '赏月', '嫦娥', '玉兔', '银河', '团圆'],
-    '国庆节': ['国旗', '阅兵', '长城', '升旗', '烟花'],
-    '圣诞节': ['圣诞树', '礼物', '雪橇', '铃铛', '彩灯', '圣诞老人'],
-    '生日': ['蛋糕', '蜡烛', '许愿', '鲜花', '礼物'],
+    '中秋节': ['月饼', '赏月', '团圆'],
+    '国庆节': ['国旗', '阅兵', '烟花'],
+    '圣诞节': ['圣诞树', '礼物', '圣诞老人'],
+    '生日': ['蛋糕', '蜡烛', '礼物'],
     '毕业': ['学士帽', '毕业证书', '校园'],
-    '结婚': ['婚纱', '戒指', '红地毯', '教堂', '跑车', '花束'],
-    '乔迁': ['新家', '钥匙', '花园', '建筑', '红地毯']
+    '结婚': ['婚纱', '戒指', '花束'],
+    '乔迁': ['新家', '钥匙', '红地毯'],
+    '普通节日': ['祝福', '喜悦', '幸福']
   };
 
-  const keywords = scenarioKeywords[festival] || ['祝福', '喜悦', '幸福'];
+  const keywords = scenarioKeywords[festival];
   scenario = keywords.find(k => wishes.includes(k)) || scenario;
 
   return { festival, scenario };
