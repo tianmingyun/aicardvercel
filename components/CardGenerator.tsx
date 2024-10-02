@@ -63,7 +63,7 @@ const CardGenerator: React.FC = () => {
       <form onSubmit={handleSubmit} className="mb-8">
         <div className="mb-4">
           <label htmlFor="wishes" className="block text-sm font-medium text-gray-700 mb-2">
-            请输入祝福语
+            请输入祝福语（包含节日和场景，例如：祝你新年快乐，烟花绽放；生日快乐，蛋糕甜蜜）
           </label>
           <input
             type="text"
@@ -72,6 +72,7 @@ const CardGenerator: React.FC = () => {
             onChange={(e) => setWishes(e.target.value)}
             className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
             required
+            placeholder="输入您的祝福语，包含节日和场景细节"
           />
         </div>
         <button
