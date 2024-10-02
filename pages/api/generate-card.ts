@@ -16,7 +16,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   }
 
   try {
-    console.log('Generating base image...')
+    console.log('Generating image...')
     const imageUrl = await generateImage(wishes)
     console.log('Image generated:', imageUrl)
 
