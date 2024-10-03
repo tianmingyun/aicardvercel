@@ -145,9 +145,7 @@ const scenarioKeywords: Record<Festival, FestivalDetails> = {
     detailElements: '鲜花拱门、婚戒、香槟塔',
     perspectiveAndComposition: '以新人为中心，突出重要时刻',
     dynamicOrStatic: '静态为主，体现庄重与温馨',
-    time
-
-AndPlace: '教堂、户外草坪或豪华宴会厅',
+    timeAndPlace: '教堂、户外草坪或豪华宴会厅',
     styleAndTechnique: '柔和的色调，突出新人的幸福表情'
   },
   '乔迁': {
