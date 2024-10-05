@@ -196,8 +196,8 @@ function buildOptimizedPrompt(wishes: string): string {
   const { festival, scenario } = extractScenarioDetails(wishes);
   const festivalDetails = scenarioKeywords[festival];
   
-  const basePrompt = `Create a high-quality, detailed greeting card image for ${festival} celebration, focusing on the following characteristics:`;
-  const style = "Photorealistic, vibrant colors, high contrast, sharp focus";
+  const basePrompt = `Create a high-quality, photorealistic greeting card image for ${festival} celebration, focusing on the following characteristics:`;
+  const style = "Photorealistic, high-definition photograph, vibrant colors, high contrast, sharp focus";
   const composition = festivalDetails.perspectiveAndComposition;
   const elements = `Include festive elements such as ${scenario} and ${festivalDetails.detailElements}`;
   const sceneDescription = festivalDetails.sceneDescription;
@@ -206,7 +206,7 @@ function buildOptimizedPrompt(wishes: string): string {
   const colorAndLighting = festivalDetails.colorAndLighting;
   const dynamicOrStatic = festivalDetails.dynamicOrStatic;
   const timeAndPlace = festivalDetails.timeAndPlace;
-  const styleAndTechnique = festivalDetails.styleAndTechnique;
+  const styleAndTechnique = `High-definition photorealistic style, ${festivalDetails.styleAndTechnique}`;
 
   return `${basePrompt}
   - Style: ${style}
@@ -220,7 +220,7 @@ function buildOptimizedPrompt(wishes: string): string {
   - Time and Place: ${timeAndPlace}
   - Style and Technique: ${styleAndTechnique}
   - Specific wish: "${wishes}"
-  Make sure the image is suitable for a ${festival} greeting card and reflects the sentiment of the wish, prominently featuring ${scenario} and other elements typical of ${festival}.`;
+  Make sure the image is a high-definition, photorealistic photograph suitable for a ${festival} greeting card and reflects the sentiment of the wish, prominently featuring ${scenario} and other elements typical of ${festival}.`;
 }
 
 export async function generateImage(prompt: string): Promise<string> {
