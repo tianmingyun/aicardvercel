@@ -1,4 +1,4 @@
-import axios from 'axios';
+import { generateImageWithXfyun } from './xfyunApi';
 
 type Festival = '新年' | '春节' | '元宵节' | '清明节' | '端午节' | '中秋节' | '国庆节' | '圣诞节' | '生日' | '毕业' | '结婚' | '乔迁' | '普通节日';
 
@@ -174,9 +174,6 @@ const scenarioKeywords: Record<Festival, FestivalDetails> = {
   }
 };
 
-// 定义 API URL 常量
-const DIFY_API_URL = process.env.DIFY_API_URL || 'https://api.dify.ai/v1/files/images';
-
 function extractScenarioDetails(wishes: string): { festival: Festival, scenario: string } {
   const festivals: Festival[] = ['新年', '春节', '元宵节', '清明节', '端午节', '中秋节', '国庆节', '圣诞节', '生日', '毕业', '结婚', '乔迁'];
   let festival: Festival = '普通节日';
@@ -231,24 +228,7 @@ export async function generateImage(prompt: string): Promise<string> {
     console.log('Generating image for prompt:', prompt);
     const optimizedPrompt = buildOptimizedPrompt(prompt);
     console.log('Optimized prompt:', optimizedPrompt);
-
-    const response = await axios.post(
-      DIFY_API_URL,
-      {
-        prompt: optimizedPrompt,
-        response_format: 'url',
-        n: 1,
-        size: '1024x1024'
-      },
-      {
-        headers: {
-          'Authorization': `Bearer ${process.env.DIFY_API_KEY}`,
-          'Content-Type': 'application/json'
-        }
-      }
-    );
-
-    const imageUrl = response.data.data[0].url;
+    const imageUrl = await generateImageWithXfyun(optimizedPrompt);
     console.log('Image generated:', imageUrl);
     return imageUrl;
   } catch (error) {
